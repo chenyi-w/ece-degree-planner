@@ -399,7 +399,7 @@ def check(request):
             if not pre_pass:
                 return jsonResponse(1, "Failed to pass the pre-course of {} {}".format(i["code"], i["title"]))
 
-        if i["passlevel"] == -1 or i["passlevel"] <= i["passscore"]:
+        if i["passlevel"] == -1 or i["passlevel"] <= i["passscore"] or i["passlevel"] == 13: # passlevel = 13 for T:
             total = total + i["credits"]
             continue
         elif i["passlevel"] > i["passscore"]:
