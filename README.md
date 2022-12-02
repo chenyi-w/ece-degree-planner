@@ -8,6 +8,8 @@
     
 2. #### Connect to the Database:
 
+    We used MySQL for this project, so you need to [install MySQL](https://www.mysqltutorial.org/install-mysql/) and create a root account before this step.
+    
     Check the [`settings.py`](https://github.com/chenyi-w/ece-degree-planner/blob/master/standard/settings.py#L81) file and change the password if necessary.
     
 3. #### Run Server:
