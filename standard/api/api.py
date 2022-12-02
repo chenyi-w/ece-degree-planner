@@ -369,13 +369,16 @@ def check(request):
                 if pre_course:
                     print(pre_course["level"], i["level"])
 
-                    if i["code"].strip().lower() == "math2114":
-                        if course_info['code'].strip().lower() == "math1226":
-                            pre_pass = True
-                            break
-                        if pre_course["level"] < 3:
-                            pre_pass = True
-                            break
+                    if course_info["code"] == "MATH 1225":
+                        temp = pre_course["passlevel"]
+
+                    if i["code"].strip().lower() == "math  2114":
+                        print("2114")
+                        if course_info['code'].strip().lower() == "math 1226":
+                            if temp <= 3:
+                                pre_pass = True
+                                break
+                    
                     else:
                         pre_pass = True
 
