@@ -57,7 +57,7 @@ CREATE TABLE `course`  (
 -- Records of course
 -- ----------------------------
 INSERT INTO `course` VALUES (1, 'Computer Engineering', 'Networking & Cybersecurity', 'General Chemistry', 'CHEM 1035', 0, 'fall', 9, 'spring,fall', 3, NULL);
-INSERT INTO `course` VALUES (2, 'Computer Engineering', 'Networking & Cybersecurity', 'General Chemistry Lab', 'CHEM 1045', 0, 'fall', 9, 'spring,fall', 1, '');
+INSERT INTO `course` VALUES (2, 'Computer Engineering', 'Networking & Cybersecurity', 'General Chemistry Lab', 'CHEM 1045', 0, 'fall', 9, 'spring,fall', 1, NULL);
 INSERT INTO `course` VALUES (3, 'Computer Engineering', 'Networking & Cybersecurity', 'First Year Writing', 'ENGL 1105', 0, 'fall', 9, 'spring,fall', 3, NULL);
 INSERT INTO `course` VALUES (4, 'Computer Engineering', 'Networking & Cybersecurity', 'Calculus of a Single Variable', 'MATH 1225', 0, 'fall', 6, 'spring,fall', 4, NULL);
 INSERT INTO `course` VALUES (5, 'Computer Engineering', 'Networking & Cybersecurity', 'First Year Writing', 'ENGL 1106', 0, 'spring', 9, 'spring,fall', 3, '4');
@@ -69,20 +69,20 @@ INSERT INTO `course` VALUES (10, 'Computer Engineering', 'Networking & Cybersecu
 INSERT INTO `course` VALUES (11, 'Computer Engineering', 'Networking & Cybersecurity', 'Introduction  to  Linear  Algebra', 'MATH  2114', 0, 'fall', 7, 'spring,fall', 3, '6');
 INSERT INTO `course` VALUES (12, 'Computer Engineering', 'Networking & Cybersecurity', 'Introduction to Differential Equations', 'MATH 2214', 1, 'fall', 7, 'spring,fall', 3, '6');
 INSERT INTO `course` VALUES (13, 'Computer Engineering', 'Networking & Cybersecurity', 'Foundations of Physics I', 'PHYS 2306', 1, 'fall', 10, 'spring,fall', 4, '7');
-INSERT INTO `course` VALUES (14, 'Computer Engineering', 'Networking & Cybersecurity', 'Circuits and Devices', 'ECE 2024', 1, 'fall', 6, 'spring,fall', 3, '13');
-INSERT INTO `course` VALUES (15, 'Computer Engineering', 'Networking & Cybersecurity', 'Fundamentals of Digital Systems (C)', 'ECE 2544', 1, 'fall', 6, 'spring,fall', 3, '5');
+INSERT INTO `course` VALUES (14, 'Computer Engineering', 'Networking & Cybersecurity', 'Circuits and Devices', 'ECE 2024', 1, 'fall', 6, 'spring,fall', 3, '10,11');
+INSERT INTO `course` VALUES (15, 'Computer Engineering', 'Networking & Cybersecurity', 'Fundamentals of Digital Systems', 'ECE 2544', 1, 'fall', 6, 'spring,fall', 3, '5,10');
 INSERT INTO `course` VALUES (16, 'Computer Engineering', 'Networking & Cybersecurity', 'Introduction  to  Multivariable  Calculus', 'MATH  2204', 1, 'spring', 10, 'spring,fall', 3, '6');
-INSERT INTO `course` VALUES (17, 'Computer Engineering', 'Networking & Cybersecurity', 'Physical Electronics (C)', 'ECE 2214', 1, 'spring', 6, 'spring,fall', 3, '14');
-INSERT INTO `course` VALUES (18, 'Computer Engineering', 'Networking & Cybersecurity', 'Embedded Systems (C)', 'ECE 2564', 1, 'spring', 6, 'spring,fall', 3, '15');
-INSERT INTO `course` VALUES (19, 'Computer Engineering', 'Networking & Cybersecurity', 'Signals and Systems(C)', 'ECE 2714', 1, 'spring', 6, 'spring,fall', 3, '15');
-INSERT INTO `course` VALUES (21, 'Computer Engineering', 'Networking & Cybersecurity', 'Integrated  Design  Project  (C)', 'ECE  2804', 1, 'spring', 6, 'spring,fall', 2, '14');
+INSERT INTO `course` VALUES (17, 'Computer Engineering', 'Networking & Cybersecurity', 'Physical Electronics', 'ECE 2214', 1, 'spring', 6, 'spring,fall', 3, '14');
+INSERT INTO `course` VALUES (18, 'Computer Engineering', 'Networking & Cybersecurity', 'Embedded Systems', 'ECE 2564', 1, 'spring', 6, 'spring,fall', 3, '15,46');
+INSERT INTO `course` VALUES (19, 'Computer Engineering', 'Networking & Cybersecurity', 'Signals and Systems', 'ECE 2714', 1, 'spring', 6, 'spring,fall', 3, '14,15,46');
+INSERT INTO `course` VALUES (21, 'Computer Engineering', 'Networking & Cybersecurity', 'Integrated  Design  Project', 'ECE  2804', 1, 'spring', 6, 'spring,fall', 2, '14,15,46');
 INSERT INTO `course` VALUES (22, 'Computer Engineering', 'Networking & Cybersecurity', 'Computer Organization and Architecture', 'ECE 3504', 2, 'fall', 7, 'spring,fall', 3, '21');
 INSERT INTO `course` VALUES (23, 'Computer Engineering', 'Networking & Cybersecurity', 'Data Structure and Algorithms', 'ECE 3514', 2, 'fall', 7, 'spring,fall', 3, '21');
 INSERT INTO `course` VALUES (24, 'Computer Engineering', 'Networking & Cybersecurity', 'Probability and Statistics for Electrical Engineers', 'STAT 4714', 2, 'fall', 7, 'spring,fall', 3, '16');
-INSERT INTO `course` VALUES (25, 'Computer Engineering', 'Networking & Cybersecurity', 'Applied Software Design', 'ECE 3574', 2, 'spring', 7, 'spring,fall', 3, '23');
-INSERT INTO `course` VALUES (26, 'Computer Engineering', 'Networking & Cybersecurity', 'Intro  to  Computer  Networking', 'ECE  3564', 2, 'spring', 7, 'spring,fall', 3, '24');
-INSERT INTO `course` VALUES (27, 'Computer Engineering', 'Networking & Cybersecurity', 'Senior Design Project', 'ECE 4805', 3, 'fall', 7, 'spring,fall', 3, NULL);
-INSERT INTO `course` VALUES (28, 'Computer Engineering', 'Networking & Cybersecurity', 'Network  Application  Design', 'ECE  4564', 3, 'fall', 10, 'spring,fall', 3, '23');
+INSERT INTO `course` VALUES (25, 'Computer Engineering', 'Networking & Cybersecurity', 'Applied Software Design', 'ECE 3574', 2, 'spring', 7, 'spring,fall', 3, '21,23');
+INSERT INTO `course` VALUES (26, 'Computer Engineering', 'Networking & Cybersecurity', 'Intro  to  Computer  Networking', 'ECE  3564', 2, 'spring', 7, 'spring,fall', 3, '19,21,24');
+INSERT INTO `course` VALUES (27, 'Computer Engineering', 'Networking & Cybersecurity', 'Senior Design Project', 'ECE 4805', 3, 'fall', 7, 'spring,fall', 3, '21,22,23');
+INSERT INTO `course` VALUES (28, 'Computer Engineering', 'Networking & Cybersecurity', 'Network  Application  Design', 'ECE  4564', 3, 'fall', 10, 'spring,fall', 3, '23,26');
 INSERT INTO `course` VALUES (29, 'Computer Engineering', 'Networking & Cybersecurity', 'Introduction to Discrete Math', 'MATH 2534', 3, 'fall', 10, 'spring,fall', 3, '10');
 INSERT INTO `course` VALUES (30, 'Computer Engineering', 'Networking & Cybersecurity', 'Senior Design Project', 'ECE 4806', 3, 'spring', 10, 'spring,fall', 3, '27');
 INSERT INTO `course` VALUES (31, 'Computer Engineering', 'Networking & Cybersecurity', 'Computer and Network Security Fundamentals', 'ECE 4560', 3, 'spring', 10, 'spring', 3, '26');
@@ -99,7 +99,7 @@ INSERT INTO `course` VALUES (41, 'Computer Engineering', 'Networking & Cybersecu
 INSERT INTO `course` VALUES (42, 'Computer Engineering', 'Networking & Cybersecurity', 'Pathways 2 or 3 or 6a', '', 3, 'fall', 10, 'spring,fall', 3, NULL);
 INSERT INTO `course` VALUES (43, 'Computer Engineering', 'Networking & Cybersecurity', 'Pathways  7  or  Free  Elective', '', 3, 'spring', 10, 'spring,fall', 3, NULL);
 INSERT INTO `course` VALUES (44, 'Computer Engineering', 'Networking & Cybersecurity', 'Free Elective', '', 3, 'spring', 10, 'spring,fall', 3, NULL);
-INSERT INTO `course` VALUES (46, 'Computer Engineering', 'Networking & Cybersecurity', ' Computational Engineering', 'ECE 2514', 2, 'fall', 6, 'spring,fall', 3, '14,15');
+INSERT INTO `course` VALUES (46, 'Computer Engineering', 'Networking & Cybersecurity', 'Computational Engineering', 'ECE 2514', 1, 'fall', 6, 'spring,fall', 3, '10');
 
 -- ----------------------------
 -- Table structure for major
