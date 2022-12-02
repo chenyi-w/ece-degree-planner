@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="../css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue-resource.min.js"></script>
+    <script src="../js/config.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="header2">
+        <div class="left">
+            <a href="../index.html"><img src="../images/logo.png" class="logo"></a>
+        </div>
+        <div class="right" style="text-align: right;">
+            <div class="login">
+                <a href="javascript:void(0);" v-show="isLogin">Welcome,{{ user.username }}</a>
+                <a href="javascript:void(0);" @click="logout" class="btn btn-primary navbar-btn"
+                   v-show="isLogin">Logout</a>
+                <a href="../pages/add_course.html">
+                    <button type="button" class="btn">Add Course</button>
+                </a>
+                <a href="../pages/list.html">
+                    <button type="button" class="btn">View Course</button>
+                </a>
+                <a href="../pages/majors.html">
+                    <button type="button" class="btn">View Majors</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container" style="max-width: 1200px;">
+        <br>
+        <div class="main-box">
+            <div class="row form-inline">
+                <label>Degree: &nbsp;</label>
+                <select class="form-control" v-model="degree" @change="queryData">
+                    <option value="">Degree</option>
+                    <option v-for="item in degrees" :value="item.name">{{ item.name }}</option>
+                </select>
+                <label> &nbsp; &nbsp;Major: &nbsp;</label>
+                <select class="form-control" v-model="major" @change="queryData">
+                    <option value="">Major</option>
+                    <option v-for="item in majors" :value="item.name">{{ item.name }}</option>
+                </select>
+                <label> &nbsp; &nbsp;Year: &nbsp;</label>
+                <select class="form-control" v-model="year" @change="queryData">
+                    <option value="">Year</option>
+                    <option value="0">First Year</option>
+                    <option value="1">Second Year</option>
+                    <option value="2">Third Year</option>
+                    <option value="3">Fourth Year</option>
+                </select>
+                <label> &nbsp; &nbsp;Term: &nbsp;</label>
+                <select class="form-control" v-model="season" @change="queryData">
+                    <option value="">Term</option>
+                    <option value="fall">Fall</option>
+                    <option value="spring">Spring</option>
+                    <option value="summer">Summer</option>
+                    <option value="winter">Winter</option>
+                </select>
+
+                <a @click="resetCourse" style="margin-left: 10px;" class="btn btn-primary navbar-btn">Reset</a>
+
+                <a @click="addCourse" style="margin-left: 10px;" class="btn btn-primary navbar-btn">Add Course</a>
+
+            </div>
+            <br>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Degree</th>
+                    <th>Major</th>
+                    <th>Course number</th>
+                    <th>Course name</th>
+                    <th>Year</th>
+                    <th>Term</th>
+                    <th>Credits</th>
+                    <th>Operate</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="c in courses">
+                    <td>{{ c.degree }}</td>
+                    <td>{{ c.major }}</td>
+                    <td>{{ c.code }}</td>
+                    <td>{{ c.title }}</td>
+                    <td>{{ c.level + 1}}</td>
+                    <td>{{ c.season }}</td>
+                    <td>{{ c.credits }}</td>
+                    <td>
+                        <a @click="editCourse(c.id)" style="margin-left: 10px;"
+                           class="btn btn-primary navbar-btn btn-sm">Edit</a>
+                        <a @click="deleteCourse(c.id)" style="margin-left: 10px;"
+                           class="btn btn-primary navbar-btn btn-sm">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            title: Title,
+            degree: '',
+            major: '',
+            year: '0',
+            season: 'fall',
+            user: {},
+            courses: [],
+            isLogin: false,
+            majors:[],
+            degrees:[]
+        },
+        mounted() {
+            this.init();
+            this.queryData();
+            this.majorList();
+            this.degreeList();
+        },
+        methods: {
+            init: function () {
+                document.title = this.title;
+                let user = session("user");
+                if (user) {
+                    this.isLogin = true;
+                    this.user = JSON.parse(user);
+                } else {
+                    this.isLogin = false;
+                }
+            },
+            logout: function () {
+                window.sessionStorage.clear();
+                this.isLogin = false;
+                redirect('pages/index')
+            },
+            queryData: function () {
+                this.$http.get(BASE_URL + '/api/course', {
+                    "params": {
+                        degree: this.degree,
+                        major: this.major,
+                        year: this.year,
+                        season: this.season,
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.courses = res.body.data
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            degreeList: function () {
+                this.$http.get(BASE_URL + '/api/degree', {
+                    "params": {
+                        //degree: this.degree,
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.degrees = res.body.data
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            majorList: function () {
+                this.$http.get(BASE_URL + '/api/major', {
+                    "params": {
+                        degree: this.degree,
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.majors = res.body.data
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            addCourse() {
+                redirect("pages/add_course")
+            },
+            editCourse(id) {
+                redirect("pages/edit_course", {"id": id})
+            },
+            deleteCourse(id) {
+                let _this = this;
+                this.$http.delete(BASE_URL + '/api/course', {
+                    "params": {
+                        id: id
+                    },
+                }, {emulateJSON: true}).then(function (res) {
+                    alert(res.body.msg);
+                    _this.queryData()
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            resetCourse() {
+                this.degree = ""
+                this.major = ""
+                this.year = ""
+                this.season = ""
+                this.queryData()
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="../css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue-resource.min.js"></script>
+    <script src="../js/config.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="header2">
+        <div class="left">
+            <a href="../index.html"><img src="../images/logo.png" class="logo"></a>
+        </div>
+        <div class="right" style="text-align: right;">
+            <div class="login">
+                <a href="javascript:void(0);" v-show="isLogin">Welcome,{{ user.username }}</a>
+                <a href="javascript:void(0);" @click="logout" class="btn btn-primary navbar-btn"
+                   v-show="isLogin">Logout</a>
+                <a href="../pages/plan.html">
+                    <button type="button" class="btn">Edit Plan</button>
+                </a>
+                <a href="../pages/view.html">
+                    <button type="button" class="btn">View Plan</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main">
+            <div class="row form-inline">
+                <label for="sel1">Select Year:</label>
+                <select class="form-control form-inline" v-model="year" @change="submit" style="width: 180px;">
+                    <option value="0">First Year</option>
+                    <option value="1">Second Year</option>
+                    <option value="2">Third Year</option>
+                    <option value="3">Fourth Year</option>
+                </select>
+
+                <label for="sel1">Select Term:</label>
+                <select class="form-control form-inline" v-model="season" @change="submit" style="margin-left: 10px;">
+                    <option v-for='s,index in seasons' :value="s">{{ s }}</option>
+                </select>
+
+                <a href="javascript:void(0);" @click="redirect('pages/add')" style="margin-left: 10px;"
+                   class="btn btn-primary navbar-btn">Add Course</a>
+            </div>
+            <br>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Course number</th>
+                    <th>Course name</th>
+                    <th>Offered</th>
+                    <th>Semester Change</th>
+                    <th>Completed</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="c in course">
+                    <td>{{c.code}}</td>
+                    <td>{{c.title}}</td>
+                    <td>{{c.offered}}</td>
+                    <td>
+                        <select class="form-control" @change="update(event,c.id)">
+                            <option>-Move to</option>
+                            <optgroup v-for='y,index in years' :label="y">
+                                <option :value="index+'-fall'">fall</option>
+                                <option :value="index+'-spring'">spring</option>
+                                <option :value="index+'-summer'">summer</option>
+                                <option :value="index+'-winter'">winter</option>
+                            </optgroup>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control" v-model="c.passlevel" @change="updateGrade(event,c.id)">
+                            <option value="-1">-Grade</option>
+                            <optgroup label="Grade">
+                                <option v-for='g,index in grades' :value="index">{{g}}</option>
+                            </optgroup>
+                        </select>
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" @click="deleteCourse(c.id)" class="btn btn-primary navbar-btn">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <a href="https://www.pathways.prov.vt.edu/about.html">Pathways: General Education for All</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let vm = new Vue({
+        el: '#app',
+        data: {
+            title: Title,
+            user: {},
+            degree: "",
+            major: "",
+            year: "",
+            years: ["FIRST YEAR", "SECOND YEAR", "THIRD YEAR", "FOURTH YEAR"],
+            season: "",
+            seasons: ["spring", "summer", "fall", "winter"],
+            course: [],
+            grades: ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F'],
+            isLogin: false
+        },
+        mounted() {
+            this.init()
+        },
+        methods: {
+            init: function () {
+                document.title = this.title;
+
+                this.degree = session("user");
+                this.major = session("major");
+
+                let year = parseInt(session("year"));
+
+                // //render year
+                // for (let i = 0; i < 4; i++) {
+                //     this.years.push(year + i);
+                // }
+
+                this.season = "spring"
+                this.year = 0;
+
+                this.submit();
+
+                let user = session("user");
+                if (user) {
+                    this.isLogin = true;
+                    this.user = JSON.parse(user);
+                } else {
+                    this.isLogin = false;
+                }
+            },
+            submit: function () {
+                this.$http.get(BASE_URL + '/api/plan', {
+                    "params": {
+                        token: session("token"),
+                        degree: session("degree"),
+                        major: session("major"),
+                        level: this.year,
+                        season: this.season
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.course = res.body.data;
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            update: function (event, id) {
+                console.log(id)
+                console.log(event.target.value)
+
+                if (!event.target.value) {
+                    return
+                }
+
+                let level = event.target.value.split("-")[0]
+                let season = event.target.value.split("-")[1]
+
+                this.$http.put(BASE_URL + '/api/plan', {
+                    token: session("token"),
+                    id: id,
+                    level: level,
+                    season: season
+                }, {emulateJSON: true}).then(function (res) {
+                    alert(res.body.msg);
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            updateGrade: function (event, id) {
+                console.log(id)
+                console.log(event.target.value)
+
+                if (!event.target.value) {
+                    return
+                }
+
+                let passlevel = event.target.value
+
+                this.$http.put(BASE_URL + '/api/plan', {
+                    token: session("token"),
+                    id: id,
+                    passlevel: passlevel,
+                }, {emulateJSON: true}).then(function (res) {
+                    alert(res.body.msg);
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            deleteCourse(id) {
+                let _this = this;
+                this.$http.delete(BASE_URL + '/api/plan', {
+                    "params": {
+                        id: id
+                    },
+                }, {emulateJSON: true}).then(function (res) {
+                    alert(res.body.msg);
+                    _this.submit()
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            logout: function () {
+                window.sessionStorage.clear();
+                this.isLogin = false;
+                redirect('pages/index')
+                redirect('pages/index')
+            },
+        }
+    })
+</script>
+</body>
+</html>

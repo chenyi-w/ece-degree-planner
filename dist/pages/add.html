@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="../css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue-resource.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../../../../php/WP2250/a2/js/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="header2">
+        <div class="left">
+            <a href="../index.html"><img src="../images/logo.png" class="logo"></a>
+        </div>
+        <div class="right" style="text-align: right;">
+            <div class="login">
+                <a href="javascript:void(0);" v-show="isLogin">Welcome,{{ user.username }}</a>
+                <a href="javascript:void(0);" @click="logout" class="btn btn-primary navbar-btn"
+                   v-show="isLogin">Logout</a>
+                <a href="../pages/plan.html">
+                    <button type="button" class="btn">Edit Plan</button>
+                </a>
+                <a href="../pages/view.html">
+                    <button type="button" class="btn">View Plan</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="">
+            <br>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Course number</th>
+                    <th>Course name</th>
+                    <th>Year</th>
+                    <th>Season</th>
+                    <th>Credits</th>
+                    <th>Add Course</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="c in courses">
+                    <td>{{ c.code }}</td>
+                    <td>{{ c.title }}</td>
+                    <td>{{ c.level + 1 }}</td>
+                    <td>{{ c.season }}</td>
+                    <td>{{ c.credits }}</td>
+                    <td>
+                        <a href="javascript:void(0);" @click="addCourse(c.id)"
+                           class="btn btn-primary navbar-btn">Add</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            title: Title,
+            user: {},
+            courses: [],
+            isLogin: false
+        },
+        mounted() {
+            this.init()
+            this.queryData()
+        },
+        methods: {
+            init: function () {
+                document.title = this.title;
+                let user = session("user");
+                if (user) {
+                    this.isLogin = true;
+                    this.user = JSON.parse(user);
+                } else {
+                    this.isLogin = false;
+                }
+            },
+            logout: function () {
+                window.sessionStorage.clear();
+                this.isLogin = false;
+                redirect('pages/index')
+            },
+            queryData: function () {
+                this.$http.get(BASE_URL + '/api/course', {
+                    "params": {
+                        token: session("token"),
+                        degree: session("degree"),
+                        major: session("major")
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.courses = res.body.data;
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            addCourse(cid) {
+                this.$http.post(BASE_URL + '/api/plan', {
+                    token: session("token"),
+                    cid: cid
+                }, {emulateJSON: true}).then(function (res) {
+                    alert(res.body.msg)
+                }, function (res) {
+                    console.log(res)
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>

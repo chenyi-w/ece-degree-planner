@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Plan</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="../css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue-resource.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../../../../php/WP2250/a2/js/index.js"></script>
+</head>
+<body>
+<div id="app">
+    <div class="header2">
+        <div class="left">
+            <a href="../index.html"><img src="../images/logo.png" class="logo"></a>
+        </div>
+        <div class="right" style="text-align: right;">
+            <div class="login">
+                <a href="javascript:void(0);" v-show="isLogin">Welcome,{{ user.username }}</a>
+                <a href="javascript:void(0);" @click="logout" class="btn btn-primary navbar-btn"
+                   v-show="isLogin">Logout</a>
+                <a href="../pages/add_course.html">
+                    <button type="button" class="btn">Add Course</button>
+                </a>
+                <a href="../pages/list.html">
+                    <button type="button" class="btn">View Course</button>
+                </a>
+                <a href="../pages/majors.html">
+                    <button type="button" class="btn">View Majors</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="">
+            <button class="btn btn-primary btn-lg" id="addMajor-btn" @click="addMajor">
+                Add Major
+            </button>
+        </div>
+        <div class="">
+            <br>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th>Major ID</th>
+                    <th>Major Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="c in majors">
+                    <td>{{ c.id }}</td>
+                    <td>{{ c.name }}</td>
+                    <td>
+                        <a href="javascript:void(0);" @click="deleteMajor(c.id)"
+                           class="btn btn-primary navbar-btn">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            title: Title,
+            user: {},
+            majors: [],
+            isLogin: false
+        },
+        mounted() {
+            this.init()
+            this.queryData()
+        },
+        methods: {
+            init: function () {
+                document.title = this.title;
+                let user = session("user");
+                if (user) {
+                    this.isLogin = true;
+                    this.user = JSON.parse(user);
+                } else {
+                    this.isLogin = false;
+                }
+            },
+            logout: function () {
+                window.sessionStorage.clear();
+                this.isLogin = false;
+                redirect('pages/index')
+            },
+            queryData: function () {
+                this.$http.get(BASE_URL + '/api/major', {
+                    "params": {
+                        token: session("token"),
+                        degree: session("degree"),
+                        major: session("major")
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.majors = res.body.data;
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            deleteMajor(id) {
+                this.$http.delete(BASE_URL + '/api/major?id=' + id, {
+                    params:{id}
+                }, {emulateJSON: true}).then(function (res) {
+                    alert(res.body.msg)
+                    if (res.body.code === 0) {
+                        redirect('pages/list')
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            addMajor() {
+                redirect("pages/add_major")
+            },
+        }
+    })
+</script>
+</body>
+</html>

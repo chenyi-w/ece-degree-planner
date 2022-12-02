@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Degree</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="../css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../css/global.css" rel="stylesheet"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue-resource.min.js"></script>
+    <script src="../js/config.js"></script>
+</head>
+<body class="background-wall">
+<div id="app">
+    <div class="header">
+        <div class="left">
+            <a href="../index.html"><img src="../images/logo.png" class="logo"></a>
+        </div>
+        <div class="right" style="text-align: right;">
+            <!--            <div class="login" style="margin-top: 20px;">-->
+            <!--                <a href="index.html" v-show="!isLogin">-->
+            <!--                    <button type="button" class="btn">Login</button>-->
+            <!--                </a>-->
+            <!--                <a href="../pages/register.html" v-show="!isLogin">-->
+            <!--                    <button type="button" class="btn">Register</button>-->
+            <!--                </a>-->
+            <!--                <a href="javascript:void(0);" v-show="isLogin">Welcome,{{ user.account+'('+user.username+')' }}</a>-->
+            <!--                <a href="javascript:void(0);" @click="logout" class="btn btn-primary navbar-btn"-->
+            <!--                   v-show="isLogin">Logout</a>-->
+            <!--            </div>-->
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main">
+            <div class="window">
+                <div class="row">
+                    <label for="sel1">Select your degree:</label>
+                    <select class="form-control" v-model="degree" id="sel1">
+                        <option v-for="item in degrees" :value="item.name">{{ item.name }}</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <label for="sel1">Select your major:</label>
+                    <select class="form-control" v-model="major" id="sel1">
+                        <option v-for="item in majors" :value="item.name">{{ item.name }}</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <label for="sel1">Select the academic year your entered:</label>
+                    <select class="form-control" v-model="year" id="sel1">
+                        <option value="2018">2018</option>
+                        <option value="2019">2019</option>
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024">2024</option>
+                        <option value="2025">2025</option>
+                        <option value="2026">2026</option>
+                    </select>
+                </div>
+                <div class="row">
+                    <button v-if="!show" type="button" class="btn primary-button" @click="submit">Ok</button>
+                    <button v-if="show" class="btn btn-primary" disabled>
+                        <span class="spinner-grow spinner-grow-sm"></span>
+                        Loading..
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            title: Title,
+            degree: "Computer Engineering",
+            major: "Networking & Cybersecurity",
+            year: 2018,
+            user: {},
+            show: false,
+            isLogin: false,
+            majors: [],
+            degrees:[]
+        },
+        mounted() {
+            this.init()
+            this.majorList()
+            this.degreeList()
+        },
+        methods: {
+            init: function () {
+                document.title = this.title;
+                let user = session("user");
+                if (user) {
+                    this.isLogin = true;
+                    this.user = JSON.parse(user);
+                } else {
+                    this.isLogin = false;
+                }
+
+            },
+            logout: function () {
+                window.sessionStorage.clear();
+                this.isLogin = false;
+                redirect('pages/index')
+            },
+            degreeList: function () {
+                this.$http.get(BASE_URL + '/api/degree', {
+                    "params": {
+                        
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.degrees = res.body.data
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            majorList: function () {
+                this.$http.get(BASE_URL + '/api/major', {
+                    "params": {
+                        degree: this.degree,
+                    }
+                }, {emulateJSON: true}).then(function (res) {
+                    // alert(res.body.msg);
+                    if (res.body.code === 0) {
+                        this.majors = res.body.data
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            },
+            submit: function () {
+                let _this = this;
+                this.show = true;
+
+                session("degree", this.degree);
+                session("major", this.major);
+                session("year", this.year);
+
+                this.$http.post(BASE_URL + '/api/gen_plan', {
+                    token: session("token"),
+                    degree: session("degree"),
+                    major: session("major"),
+                    year: session("year")
+                }, {emulateJSON: true}).then(function (res) {
+                    _this.show = false;
+                    if (res.body.code === 0) {
+                        // alert(res.body.msg);
+                        redirect('pages/plan', {}, 500);
+                    } else {
+                        alert(res.body.msg);
+                    }
+                }, function (res) {
+                    console.log(res)
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Plan</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <link href="../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../css/global.css" rel="stylesheet" />
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/vue.min.js"></script>
+    <script src="../js/vue-resource.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/html2pdf.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <div class="header2">
+        <div class="left">
+          <a href="../index.html"
+            ><img src="../images/logo.png" class="logo"
+          /></a>
+        </div>
+        <div class="right" style="text-align: right">
+          <div class="login">
+            <a href="javascript:void(0);" v-show="isLogin"
+              >Welcome,{{ user.username }}</a
+            >
+            <a
+              href="javascript:void(0);"
+              @click="logout"
+              class="btn btn-primary navbar-btn"
+              v-show="isLogin"
+              >Logout</a
+            >
+            <a href="../pages/plan.html">
+              <button type="button" class="btn">Edit Plan</button>
+            </a>
+            <a href="../pages/view.html">
+              <button type="button" class="btn">View Plan</button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="main">
+          <br />
+          <div class="download-btn w-100 d-flex justify-content-end mt-3 mb-3">
+            <button class="btn btn-primary btn-lg" id="download-btn">
+              Download
+            </button>
+          </div>
+          <div class="w-100 h-75" id="pdf-download">
+            <div
+              v-for="item_course in sortedCourses"
+              :key="item_course.year"
+              class="table-holder"
+            >
+              <h3 v-if="item_course.courses.length > 0">
+                Year {{item_course.year + 1}} {{item_course.season}}
+              </h3>
+              <table
+                class="table table-bordered"
+                v-if="item_course.courses.length > 0"
+              >
+                <thead>
+                  <tr>
+                    <th width="200px">Course number</th>
+                    <th width="700px">Course name</th>
+                    <th>Grade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="c in item_course.courses">
+                    <td>{{c.code}}</td>
+                    <td>{{c.title}}</td>
+                    <td>{{grades[c.passlevel]}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="w-100 p-4 d-flex align-items-center justify-content-center">
+              <button
+                v-if="!show"
+                type="button"
+                class="btn primary-button"
+                @click="checkCourse"
+              >
+                Done
+              </button>
+              <button v-if="show" class="btn btn-primary" disabled>
+                <span class="spinner-grow spinner-grow-sm"></span>
+                Checking..
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let vm = new Vue({
+        el: "#app",
+        data: {
+          title: Title,
+          user: {},
+          show: false,
+          degree: "",
+          major: "",
+          year: 0,
+          years: [],
+          season: "",
+          seasons: ["fall", "spring", "summer", "winter"],
+          courses: [],
+          grades: [
+            "A",
+            "A-",
+            "B+",
+            "B",
+            "B-",
+            "C+",
+            "C",
+            "C-",
+            "D+",
+            "D",
+            "D-",
+            "F",
+          ],
+          isLogin: false,
+        },
+        mounted() {
+          this.init();
+        },
+        methods: {
+          init: function () {
+            document.title = this.title;
+
+            this.degree = session("user");
+            this.major = session("major");
+
+            let year = parseInt(session("year"));
+
+            //render year
+            for (let i = 0; i < 4; i++) {
+              this.years.push(year + i);
+            }
+
+            this.season = "spring";
+            this.year = 0;
+
+            this.submit();
+
+            let user = session("user");
+            if (user) {
+              this.isLogin = true;
+              this.user = JSON.parse(user);
+            } else {
+              this.isLogin = false;
+            }
+          },
+          submit: function () {
+            const years = [0, 1, 2, 3];
+            for (const year of years) {
+              for (const season of this.seasons) {
+                this.$http
+                  .get(
+                    BASE_URL + "/api/plan",
+                    {
+                      params: {
+                        token: session("token"),
+                        degree: session("degree"),
+                        major: session("major"),
+                        level: year,
+                        season: season,
+                      },
+                    },
+                    { emulateJSON: true }
+                  )
+                  .then(
+                    function (res) {
+                      // alert(res.body.msg);
+                      if (res.body.code === 0) {
+                        this.courses = [
+                          ...this.courses,
+                          {
+                            year: year,
+                            season: season,
+                            sorter: year + season,
+                            courses: res.body.data,
+                          },
+                        ];
+                      }
+                    },
+                    function (res) {
+                      // console.log(res);
+                    }
+                  );
+              }
+            }
+          },
+          checkCourse: function () {
+            this.show = true;
+            this.$http
+              .post(
+                BASE_URL + "/api/check",
+                {
+                  token: session("token"),
+                  degree: session("degree"),
+                  major: session("major"),
+                },
+                { emulateJSON: true }
+              )
+              .then(
+                function (res) {
+                  this.show = false;
+                  alert(res.body.msg);
+                },
+                function (res) {
+                  // console.log(res);
+                }
+              );
+          },
+          logout: function () {
+            window.sessionStorage.clear();
+            this.isLogin = false;
+            redirect("pages/index");
+            redirect("pages/index");
+          },
+        },
+        computed: {
+          sortedCourses() {
+            const sorted = Object.keys(this.courses)
+              .map((t) => {
+                this.$set(this.courses[t], "key", t);
+                return this.courses[t];
+              })
+              .sort((a, b) => {
+                if (a.sorter < b.sorter) return -1;
+                if (a.sorter > b.sorter) return 1;
+              });
+
+            return sorted;
+          },
+        },
+      });
+    </script>
+
+    <script>
+      // script to allow user to download pdf
+      const downlaod_button = document.getElementById("download-btn");
+      downlaod_button.addEventListener("click", function () {
+        const element = document.getElementById("pdf-download");
+
+        var worker = html2pdf();
+        var worker = html2pdf()
+          .from(element)
+          .save((filename = "YourDegreePlan"));
+      });
+    </script>
+  </body>
+</html>
