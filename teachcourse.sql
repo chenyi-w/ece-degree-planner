@@ -56,15 +56,15 @@ CREATE TABLE `course`  (
 -- ----------------------------
 -- Records of course
 -- ----------------------------
-INSERT INTO `course` VALUES (1, 'Computer Engineering', 'Networking & Cybersecurity', 'General Chemistry', 'CHEM 1035', 0, 'fall', 9, 'spring,fall', 3, NULL);
-INSERT INTO `course` VALUES (2, 'Computer Engineering', 'Networking & Cybersecurity', 'General Chemistry Lab', 'CHEM 1045', 0, 'fall', 9, 'spring,fall', 1, NULL);
-INSERT INTO `course` VALUES (3, 'Computer Engineering', 'Networking & Cybersecurity', 'First Year Writing', 'ENGL 1105', 0, 'fall', 9, 'spring,fall', 3, NULL);
-INSERT INTO `course` VALUES (4, 'Computer Engineering', 'Networking & Cybersecurity', 'Calculus of a Single Variable', 'MATH 1225', 0, 'fall', 6, 'spring,fall', 4, NULL);
-INSERT INTO `course` VALUES (5, 'Computer Engineering', 'Networking & Cybersecurity', 'First Year Writing', 'ENGL 1106', 0, 'spring', 9, 'spring,fall', 3, '4');
-INSERT INTO `course` VALUES (6, 'Computer Engineering', 'Networking & Cybersecurity', 'Calculus of a Single Variable ', 'MATH 1226', 0, 'spring', 9, 'spring,fall', 4, '4');
-INSERT INTO `course` VALUES (7, 'Computer Engineering', 'Networking & Cybersecurity', 'Foundations of Physics', 'PHYS 2305', 0, 'spring', 9, 'spring,fall', 4, '4');
-INSERT INTO `course` VALUES (8, 'Computer Engineering', 'Networking & Cybersecurity', 'Foundations of Engineering', 'ENGE 1215', 0, 'fall', 6, 'spring,fall', 2, NULL);
-INSERT INTO `course` VALUES (9, 'Computer Engineering', 'Networking & Cybersecurity', 'Foundations of Engineering', 'ENGE 1216', 0, 'spring', 6, 'spring,fall', 2, '8');
+INSERT INTO `course` VALUES (1, 'Computer Engineering', 'Networking & Cybersecurity', 'General Chemistry', 'CHEM 1035', 0, 'fall', 10, 'spring,fall', 3, NULL);
+INSERT INTO `course` VALUES (2, 'Computer Engineering', 'Networking & Cybersecurity', 'General Chemistry Lab', 'CHEM 1045', 0, 'fall', 10, 'spring,fall', 1, NULL);
+INSERT INTO `course` VALUES (3, 'Computer Engineering', 'Networking & Cybersecurity', 'First Year Writing', 'ENGL 1105', 0, 'fall', 10, 'spring,fall', 3, NULL);
+INSERT INTO `course` VALUES (4, 'Computer Engineering', 'Networking & Cybersecurity', 'Calculus of a Single Variable', 'MATH 1225', 0, 'fall', 7, 'spring,fall', 4, NULL);
+INSERT INTO `course` VALUES (5, 'Computer Engineering', 'Networking & Cybersecurity', 'First Year Writing', 'ENGL 1106', 0, 'spring', 10, 'spring,fall', 3, '4');
+INSERT INTO `course` VALUES (6, 'Computer Engineering', 'Networking & Cybersecurity', 'Calculus of a Single Variable ', 'MATH 1226', 0, 'spring', 10, 'spring,fall', 4, '4');
+INSERT INTO `course` VALUES (7, 'Computer Engineering', 'Networking & Cybersecurity', 'Foundations of Physics', 'PHYS 2305', 0, 'spring', 10, 'spring,fall', 4, '4');
+INSERT INTO `course` VALUES (8, 'Computer Engineering', 'Networking & Cybersecurity', 'Foundations of Engineering', 'ENGE 1215', 0, 'fall', 7, 'spring,fall', 2, NULL);
+INSERT INTO `course` VALUES (9, 'Computer Engineering', 'Networking & Cybersecurity', 'Foundations of Engineering', 'ENGE 1216', 0, 'spring', 7, 'spring,fall', 2, '8');
 INSERT INTO `course` VALUES (10, 'Computer Engineering', 'Networking & Cybersecurity', 'Introduction to ECE Concepts', 'ECE 1004', 0, 'spring', 6, 'spring,fall', 3, '8');
 INSERT INTO `course` VALUES (11, 'Computer Engineering', 'Networking & Cybersecurity', 'Introduction  to  Linear  Algebra', 'MATH  2114', 0, 'fall', 7, 'spring,fall', 3, '6');
 INSERT INTO `course` VALUES (12, 'Computer Engineering', 'Networking & Cybersecurity', 'Introduction to Differential Equations', 'MATH 2214', 1, 'fall', 7, 'spring,fall', 3, '6');
@@ -147,7 +147,7 @@ CREATE TABLE `plans`  (
 INSERT INTO `plans` VALUES (1, 2, 1, 0, 'fall', -1);
 INSERT INTO `plans` VALUES (2, 2, 2, 0, 'fall', -1);
 INSERT INTO `plans` VALUES (3, 2, 3, 0, 'fall', -1);
-INSERT INTO `plans` VALUES (4, 2, 4, 0, 'spring', -1);
+INSERT INTO `plans` VALUES (4, 2, 4, 0, 'fall', -1);
 INSERT INTO `plans` VALUES (5, 2, 5, 0, 'spring', -1);
 INSERT INTO `plans` VALUES (6, 2, 6, 0, 'spring', -1);
 INSERT INTO `plans` VALUES (7, 2, 7, 0, 'spring', -1);
@@ -187,7 +187,7 @@ INSERT INTO `plans` VALUES (40, 2, 41, 3, 'fall', -1);
 INSERT INTO `plans` VALUES (41, 2, 42, 3, 'fall', -1);
 INSERT INTO `plans` VALUES (42, 2, 43, 3, 'spring', -1);
 INSERT INTO `plans` VALUES (43, 2, 44, 3, 'spring', -1);
-INSERT INTO `plans` VALUES (44, 2, 46, 2, 'fall', -1);
+INSERT INTO `plans` VALUES (44, 2, 46, 1, 'fall', -1);
 
 -- ----------------------------
 -- Table structure for users
